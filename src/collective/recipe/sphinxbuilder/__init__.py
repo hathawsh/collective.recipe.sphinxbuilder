@@ -97,19 +97,14 @@ class Recipe(object):
         # 4. CREATE CUSTOM "sphinx-build" SCRIPT
         log.info('writing custom sphinx-builder script..')
         script = ['cd %s' % self.build_dir]
-        if 'doctest' in self.outputs:
-            script.append('make doctest')
-        if 'html' in self.outputs:
-            script.append('make html')
-        if 'latex' in self.outputs:
-            script.append('make latex')
-        if 'epub' in self.outputs:
-            script.append('make epub')
-        if 'pdf' in self.outputs:
-            latex = ''
-            if 'latex' not in self.outputs:
-                latex = 'make latex && '
-            script.append(latex+'cd %s && make all-pdf' % os.path.join(self.build_dir, 'latex'))
+        for output in self.outputs:
+            if output == 'pdf':
+                latex = ''
+                if 'latex' not in self.outputs:
+                    latex = 'make latex && '
+                script.append(latex+'cd %s && make all-pdf' % os.path.join(self.build_dir, 'latex'))
+            else:
+                script.append('make %s' % output)
         self._write_file(self.script_path, '\n'.join(script))
         os.chmod(self.script_path, 0777)
 
