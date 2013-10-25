@@ -97,7 +97,7 @@ class Recipe(object):
         # 4. CREATE CUSTOM "sphinx-build" SCRIPT
         log.info('writing custom sphinx-builder script..')
         script = ['cd %s' % self.build_dir]
-        for output in self.outputs:
+        for output in self.outputs.split():
             if output == 'pdf':
                 latex = ''
                 if 'latex' not in self.outputs:
